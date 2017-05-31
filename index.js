@@ -11,8 +11,9 @@ app.get('/', function(req, res){
 
 io.on('connection', function(socket){
     console.log('a user connected');
-    socket.on('chat message', function(msg){
-        console.log('message: ' + msg);
+    socket.on('chat message', function(user,msg){
+        var message = (new Date()).toTimeString().slice(0,8) +' : ' + user+' : ' + msg;
+        io.emit('new_message',message);
     });
     socket.on('disconnect', function(){
         console.log('user disconnected');

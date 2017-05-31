@@ -11,9 +11,12 @@
         #messages { list-style-type: none; margin: 0; padding: 0; }
         #messages li { padding: 5px 10px; }
         #messages li:nth-child(odd) { background: #eee; }
+        #username { background: #eee; padding: 1em; width: 100%; }
     </style>
 </head>
 <body>
+<input type="text" id="username" placeholder="Please type yo username here">
+<h1>Chat messages:P</h1>
 <ul id="messages"></ul>
 <form action="">
     <input id="m" autocomplete="off" /><button>Send</button>
@@ -21,12 +24,17 @@
 <script src="/socket.io/socket.io.js"></script>
 <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
 <script>
+
     $(function () {
         var socket = io();
         $('form').submit(function(){
-            socket.emit('chat message', $('#m').val());
+            var username = $('#username').val() || 'guest';
+            socket.emit('chat message',username, $('#m').val());
             $('#m').val('');
             return false;
+        });
+        socket.on('new_message', function(message) {
+            $('#messages').append($('<li>').text(message));
         });
     });
 </script>
